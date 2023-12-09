@@ -1,14 +1,14 @@
 section .data
-    studentTable db "Sarah", "90",
-                 db "James", "86",
-                 db "Tom", "74",
-                 db "Jane", "79",
-                 db "Sally", "95",
-                 db "John", "93",
-                 db "Jack", "64",
-                 db "Julie", "53",
-                 db "Yasmin", "80",
-                 db "Frank", "61"
+    students db "Sarah", "90",
+             "James", "86",
+             "Tom", "74",
+             "Jane", "79",
+             "Sally", "95",
+             "John", "93",
+             "Jack", "64",
+             "Julie", "53",
+             "Yasmin", "80",
+             "Frank", "61"
 
 section .text
     global _start
