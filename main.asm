@@ -6,19 +6,24 @@ ExitProcess proto, dwExitCode:dword
 DumpRegs PROTO
 
 .data
-	teamName db   "--------Team EMO Project--------", 0
+	teamName db   "--------Team EMO/ Team 9 Project--------", 0
 	theprocess db "-----Selection Sort Process------", 0
 	initialTable db "-----Original Student Table-----", 0
 	endResult db "-------Result/Sorted Table-------", 0
 	distribution db "-------Grade Distribution-------", 0
 	gradeLetters db "A's:,B's:,C's:,D's:,F's:,", 0
 	gradeArray db 0, 0, 0 , 0, 0
+	lettergrade1 db ' - A',0
+	lettergrade2 db ' - B',0
+	lettergrade3 db ' - C',0
+	lettergrade4 db ' - D',0
+	lettergrade5 db ' - F',0
 	nameswap1 dword 0
 	nameswap2 dword 0
 	tempstorage dword 0
 	myData db 90, 86, 74, 79, 95, 93, 64, 53, 80, 61
     names db ",Sarah,James,Tom,Jane,Sally,John,Jack,Julie,Yasmin,Frank,",0
-	swappedNames db ",Sarah,James,Tom,Jane,Sally,John,Jack,Julie,Yasmin,Frank,",0
+	swappedNames db 60 DUP(0)
 	studentName db 0, 0
 	mylength equ 10
 	num1 dword 0
@@ -36,12 +41,14 @@ main PROC
 	xor esi, esi
 	xor edi, edi
 
+;Print the team name
 print_TeamName:								;Printing out team name
 	mov edx, offset teamName				;Load data teamName into the edx register
 	call writestring						;Print
 	call crlf								;Go to next line
 	call crlf								;Go to next line
 
+;Print out "Original Table"
 print_initialTable:							;Printing out "Original Table"
 	mov edx, offset initialTable			;Load data initialTable into the edx register
 	call writestring						;Print
@@ -81,6 +88,7 @@ print_original_grade:
 	inc ebx                                 ;Increment value in ebx register by 1
 	jmp print_originalTable                 ;Jump to print_originalTable unconditionally
 
+;Printing out "Selection Sort Process" and preparing to sort
 selection_sort:
 	xor eax, eax                            ;Perform exclusive or with eax register which zeros out
 	xor ebx, ebx                            ;Perform exclusive or with ebx register which zeros out
@@ -93,7 +101,7 @@ selection_sort:
 	call writestring                        ;Print
 	call crlf                               ;Go to next line
 
-	;Selection Sort
+;Implementing Selection Sort
 outer_loop:
 	cmp ecx, mylength                       ;Compare value in ecx and mylength (equal to 10)
 	je print_Result                         ;If equal, jump to print_Result
@@ -114,6 +122,7 @@ increment_inner_loop:
 	inc ebx                                 ;Increment value in ebx register by 1
 	jmp inner_loop                          ;Jump to inner_loop unconditionally
 
+;Swapping identified grades
 swap_grades:
 	cmp ecx, esi                            ;Compare value in ecx with value in esi
 	je increment_outer_loop_no_sort         ;If equal, jump to increment_outer_loop_no_sort
@@ -130,6 +139,7 @@ swap_grades:
 	xor ecx, ecx                            ;Zero out ecx
 	xor esi, esi                            ;Zero out esi
 
+;Swapping names accordingly
 start_swap:
 	cmp ebx, 10                             ;Compare value in ebx register to value 10
 	je complete_transfer                    ;If equal, jump to complete_transfer
@@ -250,7 +260,7 @@ increment_outer_loop_no_sort:
 	inc ecx                                 ;Increment value in ecx register by 1
 	jmp outer_loop                          ;Jump to outer_loop unconditionally
 
-	;Student Table Printout
+;Printing out the table after each sort to show the process
 prepare_printer:
 	xor edx, edx                            ;Zero out edx
 	xor ecx, ecx                            ;Zero out ecx
@@ -259,6 +269,7 @@ prepare_printer:
 	xor esi, esi                            ;Zero out esi
 	jmp print_studentTable                  ;Jump to print_studentTable unconditionally
 
+;Printing names first
 print_studentTable:
 	cmp ebx, 10                             ;Compare value in register ebx to value 10
 	je increment_outer_loop                 ;If equal, jump to increment_outer_loop  
@@ -279,6 +290,7 @@ check_for_index:
 	inc esi                                 ;Increment value in esi register by 1
 	jmp print_studentTable                  ;Jump to print_studentTable unconditionally
 
+;Printing grades after names
 print_grade:
 	mov [studentName], ' '                  ;Print a space between studentName and grade
 	mov edx, offset studentName             ;Load offset of data studentName into the edx register
@@ -288,10 +300,54 @@ print_grade:
 	xor eax, eax                            ;Zero out eax
 	mov al, [myData + ebx]                  ;Move data from [myData + ebx] (calculated memory address) into al
 	call writedec                           ;Prints value from al
+	cmp al, 90								;Compare value in al to value 90
+	jge assign_A							;If greater than or equal, jump to assign_A
+	cmp al, 80								;Compare value in al to value 80
+	jge assign_B							;If greater than or equal, jump to assign_B
+	cmp al, 70								;Compare value in al to value 70
+	jge assign_C							;If greater than or equal, jump to assign_C
+	cmp al, 60								;Compare value in al to value 60
+	jge assign_D							;If greater than or equal, jump to assign_D
+	cmp al, 60								;Compare value in al to value 60
+	jl assign_F								;If less than, jump to assign_F
+
+;Printing and assigning letter grades after grades
+assign_A:
+	mov edx, offset lettergrade1            ;Load offset of data lettergrade1 into the edx register
+	call writestring                        ;Print message from edx (lettergrade1)
 	call crlf                               ;New line
 	inc ebx                                 ;Increment value in ebx register by 1
-	jmp print_studentTable                  ;Jump to print_studentTable unconditionally
+	jmp print_studentTable					;Jump to print_studentTable unconditionally
 
+assign_B:
+	mov edx, offset lettergrade2            ;Load offset of data lettergrade2 into the edx register
+	call writestring                        ;Print message from edx (lettergrade2)
+	call crlf                               ;New line
+	inc ebx                                 ;Increment value in ebx register by 1
+	jmp print_studentTable					;Jump to print_studentTable unconditionally
+
+assign_C:
+	mov edx, offset lettergrade3            ;Load offset of data lettergrade3 into the edx register
+	call writestring                        ;Print message from edx (lettergrade3)
+	call crlf                               ;New line
+	inc ebx                                 ;Increment value in ebx register by 1
+	jmp print_studentTable					;Jump to print_studentTable unconditionally
+
+assign_D:
+	mov edx, offset lettergrade4            ;Load offset of data lettergrade4 into the edx register
+	call writestring                        ;Print message from edx (lettergrade4)
+	call crlf                               ;New line
+	inc ebx                                 ;Increment value in ebx register by 1
+	jmp print_studentTable					;Jump to print_studentTable unconditionally
+
+assign_F:
+	mov edx, offset lettergrade5            ;Load offset of data lettergrade5 into the edx register
+	call writestring                        ;Print message from edx (lettergrade5)
+	call crlf                               ;New line
+	inc ebx                                 ;Increment value in ebx register by 1
+	jmp print_studentTable					;Jump to print_studentTable unconditionally
+
+;Printing the final result (Same process of printing during the sort)
 print_Result:
 	xor eax, eax                            ;Zero out eax    
 	xor ebx, ebx                            ;Zero out ebx
@@ -332,10 +388,54 @@ print_final_grade:
 	xor eax, eax                            ;Zero out eax
 	mov al, [myData + ebx]                  ;Move data from [myData + ebx] (calculated memory address) into al
 	call writedec                           ;Prints value from al
+	cmp al, 90                              ;Compare value in al to value 90
+	jge assign_A_1                          ;If greater than or equal, jump to assign_A_1   
+	cmp al, 80                              ;Compare value in al to value 80
+	jge assign_B_1                          ;If greater than or equal, jump to assign_B_1 
+	cmp al, 70                              ;Compare value in al to value 70
+	jge assign_C_1                          ;If greater than or equal, jump to assign_C_1 
+	cmp al, 60                              ;Compare value in al to value 60
+	jge assign_D_1                          ;If greater than or equal, jump assign_D_1        
+	cmp al, 60                              ;Compare value in al to value 60
+	jl assign_F_1                           ;If less than, jump to assign_F_1   
+
+
+assign_A_1:
+	mov edx, offset lettergrade1            ;Load offset of data lettergrade1 into the edx register
+	call writestring                        ;Print message from edx (lettergrade1)
 	call crlf                               ;New line
 	inc ebx                                 ;Increment value in ebx register by 1
-	jmp print_finalTable                    ;Jump to print_finalTable unconditionally
+	jmp print_finalTable					;Jump to print_studentTable unconditionally
 
+assign_B_1:
+	mov edx, offset lettergrade2            ;Load offset of data lettergrade2 into the edx register
+	call writestring                        ;Print message from edx (lettergrade2)
+	call crlf                               ;New line
+	inc ebx                                 ;Increment value in ebx register by 1
+	jmp print_finalTable					;Jump to print_studentTable unconditionally
+
+assign_C_1:
+	mov edx, offset lettergrade3            ;Load offset of data lettergrade3 into the edx register
+	call writestring                        ;Print message from edx (lettergrade3)
+	call crlf                               ;New line
+	inc ebx                                 ;Increment value in ebx register by 1
+	jmp print_finalTable					;Jump to print_studentTable unconditionally
+
+assign_D_1:
+	mov edx, offset lettergrade4            ;Load offset of data lettergrade4 into the edx register
+	call writestring                        ;Print message from edx (lettergrade4)
+	call crlf                               ;New line
+	inc ebx                                 ;Increment value in ebx register by 1
+	jmp print_finalTable					;Jump to print_studentTable unconditionally
+
+assign_F_1:
+	mov edx, offset lettergrade5            ;Load offset of data lettergrade5 into the edx register
+	call writestring                        ;Print message from edx (lettergrade5)
+	call crlf                               ;New line
+	inc ebx                                 ;Increment value in ebx register by 1
+	jmp print_finalTable					;Jump to print_studentTable unconditionally
+
+;Counting number of a letter grades
 print_distribution:
 	call crlf                               ;New line
 	xor eax, eax                            ;Zero out eax
@@ -388,6 +488,7 @@ next_grade_F:
 	inc ecx                                 ;Increment value in ecx register by 1
 	jmp count_grades                        ;Jump to count_grades unconditionally
 
+;Printing number of each letter grade
 print_letter_gradeArray:
 	cmp ebx, 5                              ;Compare value in ebx register to value 5
 	je ending_all                           ;If equal, jump to ending_all
@@ -414,12 +515,13 @@ print_integer_gradeArray:
 	inc ebx                                 ;Increment value in ebx register by 1
 	jmp print_letter_gradeArray             ;Jump to print_letter_gradeArray unconditionally
 
+;Representing number of each letter grades based off requested format
 ending_all:
 	xor ecx, ecx                            ;Zero out ecx
 	call crlf                               ;New line
 
 final_form:
-	cmp ecx, 5                              ;Comapre value from register ecx to value 5
+	cmp ecx, 5                              ;Compare value from register ecx to value 5
 	je ending                               ;If equal, jump to ending
 	xor eax, eax                            ;Zero out eax
 	mov al, [gradeArray + ecx]              ;Move data from [gradeArray + ecx] (calculated memory address) into al
@@ -427,10 +529,10 @@ final_form:
 	inc ecx                                 ;Increment value in ecx register by 1
 	jmp final_form                          ;Jump to final_form unconditionally
 
+;Ending the program
 ending:
 	call crlf                               ;New line
 
     INVOKE ExitProcess, 0
 main ENDP
 END main
-
